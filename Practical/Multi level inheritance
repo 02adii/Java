@@ -14,9 +14,9 @@ class ParentClass1
 
 
 //Parent class 2
-class ParentClass2   
+class ParentClass2  extends ParentClass1 
 { 
-	void text()
+	void text1()
   {
 		System.out.println("Inside parent class 2!!");
   }  
@@ -32,8 +32,15 @@ class Child extends   ParentClass2{
 		//creating object of child class
 		Child obj=new Child();  
 		
-		//ambiguity
-      obj.text(); 
+		
+      obj.text();
+      obj.text1();
   }   
 }
+
+
+
+
+
+
 
