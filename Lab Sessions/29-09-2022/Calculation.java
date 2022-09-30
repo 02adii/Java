@@ -1,5 +1,5 @@
 /*
- program: program for Calculation
+ program: program for Calculation (taking 3 input variable, 2 for operators and 1 for operands and perfrom "+,-,*,/" operation)
  author: Aditya Kumar
  date: 29/09/2022
  */
