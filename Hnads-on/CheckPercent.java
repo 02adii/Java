@@ -26,7 +26,7 @@ class CheckPercent {
 	  int m5=sc.nextInt();
 	 
 	  //calculating percentage 
-	  int per = (m1 + m2 + m3 + m4 + m5)/5;
+	  float per = (m1 + m2 + m3 + m4 + m5)/5;
 	 
 	  // checking the status of student (passed or failed)
 	  if(per>=60)
