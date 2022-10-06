@@ -18,12 +18,18 @@ class ReverseTheNumber {
 		System.out.println("Enter the number:");
 	    int num=sc.nextInt();
 	    int rev=0;
+            if(num>0)
+	    {
 	    //using while loop for reversing the number
 	    while(num!=0)
 	    { 
 	    	int rem=num%10;
 	    	rev = rev*10 + rem;
 	    	num/=10;
+	    }
+	    }
+	    else
+	    { System.out.println("Please enter the greater than zero")
 	    }
 		System.out.println("The reverse of the given number is:" + rev);
 	}
