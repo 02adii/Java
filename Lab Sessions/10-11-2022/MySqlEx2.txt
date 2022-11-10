@@ -1,0 +1,233 @@
+
+mysql> create database moto;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> use moto;
+Database changed
+mysql> create table bike;
+ERROR 4028 (HY000): A table must have at least one visible column.
+mysql> create table bikes(
+    -> bike_id int not null auto_increment,
+    -> bike_name varchar(20) not null,
+    -> bike_model int not null,
+    -> primary key(bike_id)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> insert into bike values(1,'NinjaH2',2020);
+ERROR 1146 (42S02): Table 'moto.bike' doesn't exist
+mysql> insert into bikes values(1,'NinjaH2',2020);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into bikes values(2,'ducati',2021);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into bikes values(3,'BMW1000R',2022);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from bikes;
++---------+-----------+------------+
+| bike_id | bike_name | bike_model |
++---------+-----------+------------+
+|       1 | NinjaH2   |       2020 |
+|       2 | ducati    |       2021 |
+|       3 | BMW1000R  |       2022 |
++---------+-----------+------------+
+3 rows in set (0.00 sec)
+
+mysql> use moto;
+Database changed
+mysql> create table cars;
+ERROR 4028 (HY000): A table must have at least one visible column.
+mysql> create table cars(
+    -> car_id int not null auto_increment,
+    -> car_name varchar(20) not null ,
+    -> car_engine varchar(10) not null,
+    -> primary key(car_id)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> insert into cars values(1,'Mclaren',720cc);
+ERROR 1054 (42S22): Unknown column '720cc' in 'field list'
+mysql> insert into cars values(1,'Mclaren',petrol);
+ERROR 1054 (42S22): Unknown column 'petrol' in 'field list'
+mysql> insert into cars values(1,'Mclaren','720cc');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into cars values (2,'Mustang','500cc');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into cars values(3,'Challenger','650cc');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into cars values(4,'Civic','300cc');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into cars values(5,'Verna','400cc');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from cars;
++--------+------------+------------+
+| car_id | car_name   | car_engine |
++--------+------------+------------+
+|      1 | Mclaren    | 720cc      |
+|      2 | Mustang    | 500cc      |
+|      3 | Challenger | 650cc      |
+|      4 | Civic      | 300cc      |
+|      5 | Verna      | 400cc      |
++--------+------------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select cars.car_name,cars.car_engine,bikes.bike_name,bikes.bike_model
+    -> from cars
+    -> INNER join bikes
+    -> ON cars.car_id=bikes.bike_id;
++------------+------------+-----------+------------+
+| car_name   | car_engine | bike_name | bike_model |
++------------+------------+-----------+------------+
+| Mclaren    | 720cc      | NinjaH2   |       2020 |
+| Mustang    | 500cc      | ducati    |       2021 |
+| Challenger | 650cc      | BMW1000R  |       2022 |
++------------+------------+-----------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select bikes.bike_name,bikes.bike_model,cars.car_name,cars.car_engine
+    -> from bikes
+    -> Inner join cars
+    -> ON bikes.bike_id=cars.car_id;
++-----------+------------+------------+------------+
+| bike_name | bike_model | car_name   | car_engine |
++-----------+------------+------------+------------+
+| NinjaH2   |       2020 | Mclaren    | 720cc      |
+| ducati    |       2021 | Mustang    | 500cc      |
+| BMW1000R  |       2022 | Challenger | 650cc      |
++-----------+------------+------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select cars.car_name,bikes.bike_name
+    -> from cars
+    -> Left join bikes
+    -> ON cars.car_id=bikes.bike_id;
++------------+-----------+
+| car_name   | bike_name |
++------------+-----------+
+| Mclaren    | NinjaH2   |
+| Mustang    | ducati    |
+| Challenger | BMW1000R  |
+| Civic      | NULL      |
+| Verna      | NULL      |
++------------+-----------+
+5 rows in set (0.01 sec)
+
+mysql> select bikes.bike_name,cars.car_name
+    -> from bikes
+    -> Left join cars
+    -> on cars.car_id=bikes.bike_id;
++-----------+------------+
+| bike_name | car_name   |
++-----------+------------+
+| NinjaH2   | Mclaren    |
+| ducati    | Mustang    |
+| BMW1000R  | Challenger |
++-----------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select bikes.bike_model,cars.car_model
+    -> from cars
+    -> left join bikes
+    -> select bikes.bike_name,cars.car_engine
+    -> from bikes
+    -> left join cars
+    -> on cars.car_id=bikes.bike_id;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select bikes.bike_name,cars.car_engine
+from bikes
+left join cars
+on cars.car_id=' at line 4
+mysql> select bikes.bike_model,cars.car_engine
+    -> from cars
+    -> left join bikes
+    -> on cars.car_id=bikes.bike_id;
++------------+------------+
+| bike_model | car_engine |
++------------+------------+
+|       2020 | 720cc      |
+|       2021 | 500cc      |
+|       2022 | 650cc      |
+|       NULL | 300cc      |
+|       NULL | 400cc      |
++------------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select cars.car_name,bikes.bike_model
+    -> from bikes
+    -> right join cars
+    -> on cars.car_id=bikes.bike_id;
++------------+------------+
+| car_name   | bike_model |
++------------+------------+
+| Mclaren    |       2020 |
+| Mustang    |       2021 |
+| Challenger |       2022 |
+| Civic      |       NULL |
+| Verna      |       NULL |
++------------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select bikes.bike_model,cars.car_engine
+    -> from cars
+    -> right join bikes
+    -> on cars.car_id=bikes.bike_id;
++------------+------------+
+| bike_model | car_engine |
++------------+------------+
+|       2020 | 720cc      |
+|       2021 | 500cc      |
+|       2022 | 650cc      |
++------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select 8 from cars full join bikes ;
++---+
+| 8 |
++---+
+| 8 |
+| 8 |
+| 8 |
+| 8 |
+| 8 |
+| 8 |
+| 8 |
+| 8 |
+| 8 |
+| 8 |
+| 8 |
+| 8 |
+| 8 |
+| 8 |
+| 8 |
++---+
+15 rows in set (0.01 sec)
+
+mysql> select * from cars full join bikes ;
++--------+------------+------------+---------+-----------+------------+
+| car_id | car_name   | car_engine | bike_id | bike_name | bike_model |
++--------+------------+------------+---------+-----------+------------+
+|      1 | Mclaren    | 720cc      |       3 | BMW1000R  |       2022 |
+|      1 | Mclaren    | 720cc      |       2 | ducati    |       2021 |
+|      1 | Mclaren    | 720cc      |       1 | NinjaH2   |       2020 |
+|      2 | Mustang    | 500cc      |       3 | BMW1000R  |       2022 |
+|      2 | Mustang    | 500cc      |       2 | ducati    |       2021 |
+|      2 | Mustang    | 500cc      |       1 | NinjaH2   |       2020 |
+|      3 | Challenger | 650cc      |       3 | BMW1000R  |       2022 |
+|      3 | Challenger | 650cc      |       2 | ducati    |       2021 |
+|      3 | Challenger | 650cc      |       1 | NinjaH2   |       2020 |
+|      4 | Civic      | 300cc      |       3 | BMW1000R  |       2022 |
+|      4 | Civic      | 300cc      |       2 | ducati    |       2021 |
+|      4 | Civic      | 300cc      |       1 | NinjaH2   |       2020 |
+|      5 | Verna      | 400cc      |       3 | BMW1000R  |       2022 |
+|      5 | Verna      | 400cc      |       2 | ducati    |       2021 |
+|      5 | Verna      | 400cc      |       1 | NinjaH2   |       2020 |
++--------+------------+------------+---------+-----------+------------+
+15 rows in set (0.00 sec)
+
+mysql>
